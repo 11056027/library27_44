@@ -6,7 +6,7 @@ class Book(models.Model):
     title = models.CharField(max_length=200)
     slug = models.CharField(max_length=200,null=True)
     author=models.CharField(max_length=50)
-    chapter = models.IntegerField()
+    chapter = models.TextField()
     pub_date = models.DateTimeField()
     content = models.TextField()
     

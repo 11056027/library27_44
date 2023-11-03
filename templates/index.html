@@ -6,22 +6,20 @@
     <h3 style='font-family:標楷體;'>書籍推薦列表</a>
 {% endblock %}
 {% block content %} 
-{% for post in posts %}
-<h4>11056027、11056044</h4>
+{% for book in books %}
 <div class='card'>
     <div class='card-header'>
         <p style='font-family:標楷體;font-size:14pt;font-weight:bold;'>
-            <a href='/post/{{post.slug}}'style="color:black;">{{ post.title }}</a>
+            <a href='/book/{{book.slug}}'style="color:black;">{{ book.title }}</a>
         </p>
     </div>
     <div class='card-body' style='background-color:#F1E2DB'>
-        <p>
-           {{ post.body | truncatechars:40 }}
-        </p>
+        <p>章節: {{book.chapter}}</p>
+        <p>作者: {{book.author | truncatechars:40 }}</p>
     </div>
     <div class='card-footer'  style='background-color:#F6F2F1'>
         <p>
-            發佈時間：{{ post.pub_date | date:"Y M d, h:m:s"}}
+            發佈時間：{{ book.pub_date | date:"Y M d, h:m:s"}}
         </p>
     </div>
 </div>

@@ -5,13 +5,13 @@ from datetime import datetime
 
 # Create your views here.
 def homepage(request):
-    posts = Book.objects.all()
+    books = Book.objects.all()
     now = datetime.now()
     return render(request,'index.html',locals())
 
-def showpost(request,slug):
-    post=Book.objects.get(slug=slug)
-    if post !=None:
-        return render(request,'post.html',locals())
+def showpost(request, slug):
+    book=Book.objects.get(slug=slug)
+    if book !=None:
+        return render(request,'book.html',locals())
     else:
         return redirect("/")

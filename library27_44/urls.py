@@ -21,5 +21,5 @@ from mysite.views import homepage,showpost
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', homepage),
-    path('post/<slug:slug>/', showpost),
+    path('book/<slug:slug>/', showpost),
 ]

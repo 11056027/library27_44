@@ -15,3 +15,8 @@ def showpost(request, slug):
         return render(request,'book.html',locals())
     else:
         return redirect("/")
+
+def book_place(request, slug):
+    book = Book.objects.get(slug=slug)
+    return render(request, 'book.html', {'book': book})
+

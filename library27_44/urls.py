@@ -20,8 +20,10 @@ from mysite.views import homepage, showpost
 
 
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', homepage),
     path('book/<slug:slug>/', showpost),
 ]
+

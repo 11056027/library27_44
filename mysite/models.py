@@ -9,6 +9,7 @@ class Book(models.Model):
     chapter = models.TextField()
     pub_date = models.DateTimeField()
     content = models.TextField()
+    place=models.CharField(max_length=5,choices=[("藏書中","藏書中"),("外借中","外借中")],default="藏書中")
     
 
     class Meta:

@@ -1,7 +1,7 @@
+from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
 
 # Create your models here.
-from django.db import models
 class Book(models.Model):
     title = models.CharField(max_length=200)
     slug = models.CharField(max_length=200,null=True)
@@ -17,3 +17,34 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
+
+class CustomUser(AbstractUser):
+    name = models.CharField(max_length=255)
+    password_confirm = models.CharField(max_length=255)
+
+    groups = models.ManyToManyField(
+        Group,
+        verbose_name="groups",
+        blank=True,
+        help_text="The groups this user belongs to.",
+        related_name="custom_users",  
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        verbose_name="user permissions",
+        blank=True,
+        help_text="Specific permissions for this user.",
+        related_name="custom_users",
+    )
+
+    def __str__(self):
+        return self.username
+
+class CustomGroup(Group):
+    user_set = models.ManyToManyField(
+        CustomUser,
+        related_name="custom_groups", 
+        blank=True,
+        help_text="The users that belong to this group.",
+        verbose_name="users",
+    )

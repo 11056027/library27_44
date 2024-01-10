@@ -16,14 +16,26 @@ Including another URLconf
 """
 from django.urls import include, path
 from django.contrib import admin
-from mysite import views as mv
+from mysite.views import *
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', mv.homepage),
-    path('book/<slug:slug>/', mv.showpost),
-    path('register/', mv.register, name='register'),
-    path('login/', mv.login, name='login')
+    path('', homepage),
+    path('book/<slug:slug>/', showpost),
+    path('register/', register, name='register'),
+    path('login/', login, name='login'),
+    
+    path('booklist/', book_list, name='booklist'),
+    path('addbook/', add_book, name='addbook'),
+    path('bookdetail/<int:book_id>/', book_detail, name='book_detail'),
+    path('editbook/<int:book_id>/', edit_book, name='editbook'),
+    path('',homepage, name='homepage'),
+    path('borrow/<int:book_id>/', borrow_book, name='borrow_book'),
+    path('return/<int:book_id>/', return_book, name='return_book'),
+    path('managepage/', managepage, name='managepage'),
+    path('readerpage/', readerpage, name='readerpage'),
+     path('carlist/', carlist),
+    path('carlist/<int:maker>/', carlist, name='carlist-url'),
 ]
 

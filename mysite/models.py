@@ -9,6 +9,7 @@ class Book(models.Model):
     chapter = models.TextField()
     pub_date = models.DateTimeField()
     content = models.TextField()
+    imgcode=models.URLField(max_length=200, null=True, blank=True)
     place=models.CharField(max_length=5,choices=[("藏書中","藏書中"),("外借中","外借中")],default="藏書中")
     
 
@@ -48,3 +49,9 @@ class CustomGroup(Group):
         help_text="The users that belong to this group.",
         verbose_name="users",
     )
+    
+class BorrowRecord(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    borrower = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    borrow_date = models.DateField()
+    return_date = models.DateField(null=True, blank=True)

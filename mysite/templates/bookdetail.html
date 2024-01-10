@@ -1,0 +1,27 @@
+<!-- bookdetail.html -->
+{% block headmessage %} 
+{% endblock headmessage %} 
+<a href="{% url 'homepage' %}">返回首頁</a>
+<h1>{{ book.title }}</h1>
+<p>作者: {{ book.author }}</p>
+<p>書籍狀況: {{ book.place }}</p>
+
+{% if book.place == '館藏中' %}
+    <form action="{% url 'borrowbook' book.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="借書">
+    </form>
+{% elif book.place == '外借中' %}
+    {% if borrow_record %}
+        {% if borrow_record.borrower == request.user %}
+            <form action="{% url 'returnbook' record_id=borrow_record.id %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="還書">
+            </form>
+        {% else %}
+            <p>此書已被借出</p>
+        {% endif %}
+    {% else %}
+        <p>無借閱記錄</p>
+    {% endif %}
+{% endif %}

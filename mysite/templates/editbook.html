@@ -1,0 +1,12 @@
+<!-- edit_book.html -->
+{% block headmessage %} 
+{% endblock headmessage %} 
+<h1>編輯書籍資料 - {{ book.title }}</h1>
+
+<a href="{% url 'homepage' %}">返回首頁</a>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Save">
+</form>

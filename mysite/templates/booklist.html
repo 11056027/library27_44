@@ -1,0 +1,18 @@
+<!-- templates/booklist.html -->
+{% block headmessage %} 
+{% endblock headmessage %} 
+<a href="{% url 'homepage' %}">返回首頁</a>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>書籍列表</title>
+</head>
+<body>
+    <h1>書籍列表</h1>
+    <ul>
+        {% for book in books %}
+        <li>{{ book.title }} - {{ book.author }} - {{ book.place}}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

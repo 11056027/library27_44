@@ -25,7 +25,8 @@ urlpatterns = [
     path('book/<slug:slug>/', showpost),
     path('register/', register, name='register'),
     path('login/', login, name='login'),
-    
+    path('logout/', logouts, name='logouts'),
+
     path('booklist/', book_list, name='booklist'),
     path('addbook/', add_book, name='addbook'),
     path('bookdetail/<int:book_id>/', book_detail, name='book_detail'),
@@ -35,7 +36,6 @@ urlpatterns = [
     path('return/<int:book_id>/', return_book, name='return_book'),
     path('managepage/', managepage, name='managepage'),
     path('readerpage/', readerpage, name='readerpage'),
-     path('carlist/', carlist),
-    path('carlist/<int:maker>/', carlist, name='carlist-url'),
+    path('toborrow/', toborrow_book, name='toborrow_book'),
+    path('toreturn/', toreturn_book, name='toreturn_book'),
 ]
-

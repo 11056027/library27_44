@@ -1,12 +1,13 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from mysite.models import *
 from datetime import *
 from mysite.forms import *
 from django.contrib import *
 from django.shortcuts import *
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate,logout
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 #基本
 def homepage(request):
     books = Book.objects.all()
@@ -23,7 +24,7 @@ def showpost(request, slug):
 def book_place(request, slug):
     book = Book.objects.get(slug=slug)
     return render(request, 'book.html', {'book': book})
-#讀者註冊登入
+#讀者註冊登入登出
 def register(request):
     if request.method == 'GET':
         form = UserRegisterForm()
@@ -36,7 +37,7 @@ def register(request):
             user_password = form.cleaned_data['user_password']
             user_password_confirm = form.cleaned_data['user_password_confirm']
             if user_password == user_password_confirm:
-                user = CustomUser.objects.create_user(user_name, user_email, user_password)
+                user = CustomUser.objects.create_user(username=user_name, email=user_email, password=user_password)
                 user.save()
                 message = f'註冊成功！'
                 return redirect('/login/')
@@ -56,8 +57,6 @@ def register(request):
         message = "ERROR"
         return render(request, 'register.html', locals())
 
-
-
 def login(request):
     if request.method == 'GET':
         form = LoginForm()
@@ -70,10 +69,17 @@ def login(request):
             user = authenticate(username=user_name, password=user_password)
             if user is not None:
                 if user.is_active:
+                    if user.is_staff:
+                        # 如果是管理員，執行相應的操作
+                        print("Admin logged in")
+                        return redirect('/managepage/')
+                    else:
+                        # 如果是一般用戶，執行相應的操作
+                        print("Regular user logged in")
                     auth.login(request, user)
                     print("success")
                     message = '成功登入了'
-                    return redirect('/')
+                    return redirect('/readerpage/')
                 else:
                     message = '帳號尚未啟用'
             else:
@@ -83,6 +89,10 @@ def login(request):
     else:
         message = "ERROR"
         return render(request, 'login.html', locals())
+    
+def logouts(request):
+    logout(request)
+    return redirect('/')
  
 #書籍管理    
 def book_place(request, slug):
@@ -156,27 +166,37 @@ def return_book(request, book_id):
         # 書籍不在外借中
         return render(request, 'book_return_error.html', {'book': book})
     
+def toborrow_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+
+    if book.is_borrowed:
+        messages.error(request, '該書籍已經被借出。')
+    else:
+        book.is_borrowed = True
+        book.borrower = request.user
+        book.save()
+        messages.success(request, f'成功借出書籍：{book.title}。')
+
+    return redirect('book_detail', slug=book.slug)
+
+def toreturn_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+
+    if not book.is_borrowed:
+        messages.error(request, '該書籍尚未被借出。')
+    elif book.borrower != request.user:
+        messages.error(request, '你不能歸還這本書，因為你不是借閱者。')
+    else:
+        book.is_borrowed = False
+        book.borrower = None
+        book.save()
+        messages.success(request, f'成功歸還書籍：{book.title}。')
+
+    return redirect('book_detail', slug=book.slug)
+    
 def managepage(request):
     return render(request, 'managepage.html' )
 
 def readerpage(request):
     return render(request, 'readerpage.html')
 
-
-def carlist(request, maker=0):
-    car_maker = ['Ford', 'Honda', 'Mazda']
-    car_list = [
-        [{'model':'Fiesta', 'price': 203500},
-            {'model':'Focus','price': 605000}, 
-            {'model':'Mustang','price': 900000}],
-		[{'model':'Fit', 'price': 450000}, 
-		 {'model':'City', 'price': 150000}, 
-		 {'model':'NSX', 'price':1200000}],
-		[{'model':'Mazda3', 'price': 329999}, 
-		 {'model':'Mazda5', 'price': 603000},
-		 {'model':'Mazda6', 'price':850000}],]
-
-    maker = maker
-    maker_name =  car_maker[maker]
-    cars = car_list[maker]
-    return render(request, 'carlist.html', locals())

@@ -1,0 +1,20 @@
+<h2>{{ book.title }}</h2>
+<p>{{ book.author }}</p>
+<p>{{ book.description }}</p>
+
+{% if book.is_borrowed %}
+    <p>已被借出</p>
+    {% if book.borrower == user %}
+        <form method="post" action="{% url 'return_book' book.id %}">
+            {% csrf_token %}
+            <button type="submit">歸還書籍</button>
+        </form>
+    {% else %}
+        <p>借閱者：{{ book.borrower.username }}</p>
+    {% endif %}
+{% else %}
+    <form method="post" action="{% url 'borrow_book' book.id %}">
+        {% csrf_token %}
+        <button type="submit">借閱書籍</button>
+    </form>
+{% endif %}

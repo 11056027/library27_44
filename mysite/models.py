@@ -22,6 +22,7 @@ class Book(models.Model):
 class CustomUser(AbstractUser):
     name = models.CharField(max_length=255)
     password_confirm = models.CharField(max_length=255)
+    is_staff = models.BooleanField(default=False)
 
     groups = models.ManyToManyField(
         Group,

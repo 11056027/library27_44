@@ -38,7 +38,18 @@ def register(request):
             user_password_confirm = form.cleaned_data['user_password_confirm']
             if user_password == user_password_confirm:
                 user = User.objects.create_user(user_name, user_email, user_password)
+                user.save()
                 message = f'註冊成功！'
+                return redirect('/login/')
+            elif user_name == "":
+                message = f'未輸入姓名'
+                return render(request, 'register.html', locals())
+            elif user_email == "":
+                message = f'未輸入email'
+                return render(request, 'register.html', locals())
+            elif User.objects.filter(user_name=user_name).exists():
+                message = "用戶名已存在。請選擇一個不同的用戶名。"
+                return render(request, 'register.html', locals())
             else:
                 message = f'兩次密碼不一致！'    
         return render(request, 'register.html', locals())
@@ -70,6 +81,7 @@ def login(request):
                     message = '帳號尚未啟用'
             else:
                 message = '登入失敗'
+
         return render(request, 'login.html', locals())
     else:
         message = "ERROR"
